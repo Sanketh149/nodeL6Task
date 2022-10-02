@@ -16,6 +16,14 @@ app.get("/todos", async function (_request, response) {
   // First, we have to query our PostgerSQL database using Sequelize to get list of all Todos.
   // Then, we have to respond with all Todos, like:
   // response.send(todos)
+
+  try {
+    const todos = await Todo.findAll({ order: [["id", "ASC"]] });
+    return response.json(todos);
+  } catch (error) {
+    console.log(error);
+    return response.status(422).json(error);
+  }
 });
 
 app.get("/todos/:id", async function (request, response) {
