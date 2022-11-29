@@ -12,9 +12,15 @@ app.use(express.static(path.join(__dirname + "/public")));
 
 app.get("/", async (req, res) => {
   const allTodos = await Todo.getTodos();
+  const overdue = await Todo.overDue();
+  const dueLater = await Todo.dueLater();
+  const dueToday = await Todo.dueToday();
   if (req.accepts("html")) {
     res.render("index", {
       allTodos,
+      overdue,
+      dueLater,
+      dueToday,
     });
   } else {
     res.json(allTodos);
