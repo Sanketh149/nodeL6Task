@@ -7,7 +7,6 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    // eslint-disable-next-line no-unused-vars
     static associate(models) {
       // define association here
     }
@@ -19,62 +18,59 @@ module.exports = (sequelize, DataTypes) => {
     static getTodos() {
       return this.findAll({ order: [["id", "ASC"]] });
     }
-    static async completed() {
+
+    static overDue() {
       return this.findAll({
-        where: {
-          completed: true,
-        },
-      });
-    }
-    markAsCompleted() {
-      return this.update({ completed: true });
-    }
-    static async overdue() {
-      // FILL IN HERE TO RETURN OVERDUE ITEMS
-      return Todo.findAll({
         where: {
           dueDate: {
             [Op.lt]: new Date().toLocaleDateString("en-CA"),
           },
+          completed: false,
         },
+        order: [["id", "ASC"]],
       });
     }
 
-    static async dueToday() {
-      // FILL IN HERE TO RETURN ITEMS DUE tODAY
-      return Todo.findAll({
+    static dueToday() {
+      return this.findAll({
         where: {
           dueDate: {
-            [Op.eq]: new Date(),
+            [Op.eq]: new Date().toLocaleDateString("en-CA"),
           },
+          completed: false,
         },
-        order: [
-          ["id", "ASC"]
-        ],
-      })
-
+        order: [["id", "ASC"]],
+      });
     }
-
-    static async dueLater() {
-      // FILL IN HERE TO RETURN ITEMS DUE LATER
-      return Todo.findAll({
+    static dueLater() {
+      return this.findAll({
         where: {
           dueDate: {
             [Op.gt]: new Date().toLocaleDateString("en-CA"),
           },
+          completed: false,
         },
-        order: [
-          ["id", "ASC"],
-        ]
-      })
-    }
-    setCompletionStatus(completed) {
-      return this.update({ completed });
+        order: [["id", "ASC"]],
+      });
     }
 
+    static completedItems() {
+      return this.findAll({
+        where: {
+          completed: true,
+        },
+        order: [["id", "ASC"]],
+      });
+    }
+
+    setCompletionStatus(bool) {
+      return this.update({ completed: bool });
+    }
+
+    // markAsCompleted() {
+    //   return this.update({ completed: true });
+    // }
   }
-
-
   Todo.init(
     {
       title: DataTypes.STRING,
