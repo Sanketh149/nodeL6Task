@@ -1,63 +1,46 @@
 const express = require("express");
 const app = express();
-const { Todo } = require("./models");
 const bodyParser = require("body-parser");
 const path = require("path");
-const { response } = require("express");
-
 app.use(bodyParser.json());
+
+// Set EJS as view engine
 app.set("view engine", "ejs");
-app.use(express.static(path.join(__dirname + "/public")));
-// app.use(express.static("public"));
 
-app.get("/", async (req, res) => {
-  const allTodos = await Todo.getTodos();
-  const overdue = await Todo.overDue();
-  const dueLater = await Todo.dueLater();
-  const dueToday = await Todo.dueToday();
-  if (req.accepts("html")) {
-    res.render("index", {
-      allTodos,
-      overdue,
-      dueLater,
-      dueToday,
-    });
-  } else {
-    res.json(allTodos);
-  }
+app.use(express.static(path.join(__dirname, "public")));
+
+const { Todo } = require("./models");
+
+app.get("/", (request, response) => {
+  response.render("index"); // index refers to index.ejs
 });
 
-app.get("/todos", async (req, res) => {
-  try {
-    const todos = await Todo.findAll({ order: [["id", "ASC"]] });
-    return res.json(todos);
-  } catch (error) {
-    console.log(error);
-    return res.status(422).json(error);
-  }
+// eslint-disable-next-line no-unused-vars
+app.get("/todos", (request, response) => {
+  console.log("Todo list");
 });
 
-app.post("/todos", async (req, res) => {
-  console.log("Body : ", req.body);
+app.post("/todos", async (request, response) => {
+  console.log("Creating a todo", request.body);
   try {
     const todo = await Todo.addTodo({
-      title: req.body.title,
-      dueDate: req.body.dueDate,
-      completed: false,
+      title: request.body.title,
+      dueDate: request.body.dueDate,
     });
-    return res.json(todo);
+    return response.json(todo);
   } catch (error) {
     console.log(error);
     return response.status(422).json(error);
   }
 });
 
-app.put("/todos/:id/markAsCompleted", async (req, res) => {
-  console.log("Todo marks completed : ", req.params.id);
-  const todo = await Todo.findByPk(req.params.id);
+// PUT http://mytodoapp.com/todos/123/markAsCompleted
+app.put("/todos/:id/markAsCompleted", async (request, response) => {
+  console.log("We have to update a todo with ID:", request.params.id);
+  const todo = await Todo.findByPk(request.params.id);
   try {
-    const updateTodo = await todo.markAsCompleted();
-    return res.json(updateTodo);
+    const updatedTodo = await todo.markAsCompleted();
+    return response.json(updatedTodo);
   } catch (error) {
     console.log(error);
     return response.status(422).json(error);
@@ -65,10 +48,8 @@ app.put("/todos/:id/markAsCompleted", async (req, res) => {
 });
 
 // eslint-disable-next-line no-unused-vars
-app.delete("/todos/:id", async (req, res) => {
-  console.log("We have to delete a Todo with ID: ", req.params.id);
-  const affectedRow = await Todo.destroy({ where: { id: req.params.id } });
-  res.send(affectedRow ? true : false);
+app.delete("/todos/:id", (request, response) => {
+  console.log("Delete a todo by ID: ", request.params.id);
 });
 
 module.exports = app;
