@@ -1,72 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="csrf-token" content="<%= csrfToken %>" />
-  <link href="./css/style.css" rel="stylesheet" type="text/css">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <title>Rahman</title>
-  <script>
-    var token = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
-    function updateTodo(id, completionStatus) {
-      fetch(`/todos/${id}`, {
-        method: "put",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          "_csrf": token,
-          completed: completionStatus,
-        })
-      }).then((res) => {
-        if (res.ok) {
-          window.location.reload();
-        }
-      })
-        .catch((err) => console.log(err));
-    }
-    function deleteTodo(id) {
-      fetch(`/todos/${id}`, {
-        method: "delete",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          "_csrf": token
-        })
-      }).then((res) => {
-        if (res.ok) {
-          window.location.reload();
-        }
-      }).catch((err) => console.log(err));
-    }
-  </script>
-</head>
-
-<body>
-
-  <div class="w-full rounded  p-8 md:max-w-sm md:mx-auto">
-    <%- include('header.ejs') %>
-      <form class="flex mb-4 md:justify-between " action="/todos" method="post">
-        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-        <div class="flex flex-col mb-4 md:w-1/2 ">
-          <input class="border border-lime-400 leading-relaxed rounded py-1.5 px-3 text-grey-darkest md:mr-2 "
-            placeholder="Enter Todo" type="text" name="title" required>
-        </div>
-        <div class="flex flex-col mb-4 md:w-1/2 ">
-          <input class="border border-lime-400 rounded py-1.5 px-3 text-grey-darkest md:ml-2" type="date" name="dueDate"
-            required>
-        </div>
-        <div class="flex-none">
-          <button class="ml-5 px-5 py-1.5 bg-green-600  text-white uppercase text-lg p-1.5 rounded"
-            type="submit">add</button>
-        </div>
-      </form>
-      <div>
-        <%- include('todos.ejs', {title: "Overdue" , data: overdue}) %>
-          <%- include('todos.ejs', {title: "Due Today" , data: dueToday}) %>
-            <%- include('todos.ejs', {title: "Due Later" , data: dueLater}) %>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>To-Do Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <div class="grid grid-cols-6">
+      <div class="col-start-3 col-span-2">
+        <%- include('header.ejs') %>
+        <form>
+          <div class="flex gap-2 py-4">
+            <div class="flex-auto">
+              <input
+                type="text"
+                placeholder="What's next?"
+                class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm"
+                required
+              />
+            </div>
+            <div class="flex-auto">
+              <input
+                type="date"
+                class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm leading-4"
+              />
+            </div>
+            <div class="flex-none">
+              <button
+                type="submit"
+                class="bg-green-600 text-white px-5 py-1.5 rounded font-medium mr-2 mb-2"
+              >
+                Add
+              </button>
+            </div>
+          </div>
+        </form>
+        <%- include('todos.ejs') %>
       </div>
-
-</body>
-
+    </div>
+  </body>
 </html>
