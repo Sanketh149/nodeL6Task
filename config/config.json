@@ -1,17 +1,17 @@
 {
   "development": {
     "username": "postgres",
-    "password": "Drvl@123",
-    "database": "wd-todo-db",
+    "password": "Rahman@1036",
+    "database": "todos",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },
   "test": {
-    "username": "postgres",
-    "password": "Drvl@123",
-    "database": "wd-todo-test-db",
+    "username": "root",
+    "password": null,
+    "database": "database_test",
     "host": "127.0.0.1",
-    "dialect": "postgres"
+    "dialect": "mysql"
   },
   "production": {
     "use_env_variable": "DATABASE_URL",
