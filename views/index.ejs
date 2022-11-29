@@ -6,38 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Ejs Templating</title>
     <link rel="stylesheet" href="/css/style.css" />
-    <script src="https://cdn.tailwindcss.com"></script>
+   
   </head>
   <body>
-    <div class="grid grid-cols-6">
-      <div class="col-span-2 col-start-3">
-        <%- include("header.ejs") %>
-        <form action="" class="mb-3">
-          <div class="flex gap-2">
-            <div class="flex-auto">
-              <input
-                type="text"
-                placeholder="What's next?"
-                class="rounded border-2 border-gray-900 w-full p-2 text-sm"
-              />
-            </div>
-            <div class="flex-auto">
-              <input
-                type="date"
-                class="rounded border-2 border-gray-900 w-full p-2 text-sm leading-4"
-              />
-            </div>
-            <div class="flex-none">
-              <input
-                type="submit"
-                value="Add"
-                class="text-white bg-green-600 px-5 rounded py-2 font-medium mr-2 mb-2"
-              />
-            </div>
-          </div>
-        </form>
-        <%- include('todos.ejs') %>
-      </div>
-    </div>
+    <!-- <h1>Todo Manager</h1> -->
+    <!-- for reuse the created common ejs file like header and footer  -->
+    <%- include("header.ejs") %>
+    <br />
+    <%- include("todos.ejs") %> <%- include("footer.ejs") %>
   </body>
 </html>
